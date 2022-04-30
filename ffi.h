@@ -66,6 +66,7 @@ struct jit;
 #endif
 
 EXTERN_C EXPORT int luaopen_ffi(lua_State* L);
+EXTERN_C EXPORT void luaL_setfuncs(lua_State *L, const luaL_Reg *l, int nup);
 
 static int lua_absindex2(lua_State* L, int idx) {
     return (LUA_REGISTRYINDEX <= idx && idx < 0)
@@ -80,22 +81,7 @@ static void lua_callk(lua_State *L, int nargs, int nresults, int ctx, lua_CFunct
 {
     lua_call(L, nargs, nresults);
 }
-/*
-** set functions from list 'l' into table at top - 'nup'; each
-** function gets the 'nup' elements at the top as upvalues.
-** Returns with only the table at the stack.
-*/
-static void luaL_setfuncs (lua_State *L, const luaL_Reg *l, int nup) {
-  luaL_checkstack(L, nup, "too many upvalues");
-  for (; l && l->name; l++) {  /* fill the table with given functions */
-    int i;
-    for (i = 0; i < nup; i++)  /* copy upvalues to the top */
-      lua_pushvalue(L, -nup);
-    lua_pushcclosure(L, l->func, nup);  /* closure with those upvalues */
-    lua_setfield(L, -(nup + 2), l->name);
-  }
-  lua_pop(L, nup);  /* remove upvalues */
-}
+
 #define lua_setuservalue lua_setfenv
 #define lua_getuservalue lua_getfenv
 #define lua_rawlen lua_objlen
