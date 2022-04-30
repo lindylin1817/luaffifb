@@ -1,3 +1,14 @@
+This repository was forked from facebookarchive. Due to the installation of torch, we still need to use luaffi. But in the original version, we met the following  problem.
+```
+static void luaL_setfuncs (lua_State *L, const luaL_Reg *l, int nup) {
+             ^~~~~~~~~~~~~
+In file included from ffi.h:48:0,
+                 from call.c:4:
+/root/torch_1/install/include/lauxlib.h:88:18: note: previous declaration of 'luaL_setfuncs' was here
+ LUALIB_API void (luaL_setfuncs) (lua_State *L, const luaL_Reg *l, int nup);
+```
+So, we have to change the code in both fft.c and fft.h, and this problem removed.
+
 [![Build Status](https://travis-ci.org/facebook/luaffifb.svg?branch=master)](https://travis-ci.org/facebook/luaffifb)
 
 About
